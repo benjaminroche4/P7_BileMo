@@ -10,7 +10,7 @@ class ProductFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for($i = 1; $i <=50; $i++){
+        for($i = 1; $i <=20; $i++){
             $product = new Product();
             $product->setBrand('Apple')
                 ->setColor('Red')

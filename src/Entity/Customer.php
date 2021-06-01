@@ -110,6 +110,23 @@ class Customer
         return $this->users;
     }
 
+
+    /**
+     * @param ArrayCollection $users
+     */
+    public function setUsers(ArrayCollection $users): void
+    {
+        $this->users = $users;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
     public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
