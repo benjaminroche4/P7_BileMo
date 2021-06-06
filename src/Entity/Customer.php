@@ -6,6 +6,8 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -16,26 +18,36 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"get:list", "get:detail"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get:list", "get:detail"})
+     * @Assert\NotBlank(message="La compagnie doit être remplit")
+     * @Assert\Length(min=3, max=50)
      */
     private $compagny;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get:detail"})
+     * @Assert\NotBlank(message="L'email doit être remplit")
+     * @Assert\Length(min=3, max=50)
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le mot de passe doit être remplit")
+     * @Assert\Length(min=3, max=80)
      */
     private $password;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"get:detail"})
      */
     private $createdAt;
 

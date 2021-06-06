@@ -7,6 +7,7 @@ use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -15,21 +16,23 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ProductController extends AbstractController
 {
     /**
-     * Permet de récuperer la liste des produits en BDD et d'envoyer le résultat aux clients
+     * Récupère la liste des produits
      *
-     * @Route("/product", name="product", methods={"GET"})
+     * @Route("/product", name="product_list", methods={"GET"})
      */
-    public function productList(ProductRepository $productRepository, SerializerInterface $serializer): Response
+    public function productList(ProductRepository $productRepository): Response
     {
         return $this->json($productRepository->findAll(), 200, [], ['groups' => 'get:list']);
     }
 
     /**
-     * Permet d'afficher les détails d'un produit et d'envoyer le résultat aux clients
+     * Recupère les détails d'un produits
+     *
      * @param Product $product
-     * @Route("/product/{id}", name="detail", methods={"GET"})
+     * @Route("/product/{id}", name="product_detail", methods={"GET"})
      */
-    public function productDetail(Product $product, SerializerInterface $serializer){
+    public function productDetail(Product $product)
+    {
         return $this->json($product, 200, []);
     }
 }
