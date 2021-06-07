@@ -20,7 +20,7 @@ class ProductController extends AbstractController
      *
      * @Route("/product", name="product_list", methods={"GET"})
      */
-    public function productList(ProductRepository $productRepository): Response
+    public function list(ProductRepository $productRepository): Response
     {
         return $this->json($productRepository->findAll(), 200, [], ['groups' => 'get:list']);
     }
@@ -31,7 +31,7 @@ class ProductController extends AbstractController
      * @param Product $product
      * @Route("/product/{id}", name="product_detail", methods={"GET"})
      */
-    public function productDetail(Product $product)
+    public function detail(Product $product)
     {
         return $this->json($product, 200, []);
     }

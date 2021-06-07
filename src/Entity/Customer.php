@@ -18,14 +18,14 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get:list", "get:detail"})
+     * @Groups({"get:list", "get:detail", "get:infos"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:list", "get:detail"})
-     * @Assert\NotBlank(message="La compagnie doit être remplit")
+     * @Groups({"get:list", "get:detail", "get:infos"})
+     * @Assert\NotBlank(message="The compagny can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
     private $compagny;
@@ -33,14 +33,14 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"get:detail"})
-     * @Assert\NotBlank(message="L'email doit être remplit")
+     * @Assert\NotBlank(message="The compagny can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Le mot de passe doit être remplit")
+     * @Assert\NotBlank(message="The password can't not be blank")
      * @Assert\Length(min=3, max=80)
      */
     private $password;

@@ -26,7 +26,7 @@ class CustomerController extends AbstractController
      *
      * @Route("/customer", name="customer_list", methods={"GET"})
      */
-    public function customerList(CustomerRepository $customerRepository){
+    public function list(CustomerRepository $customerRepository){
         return $this->json($customerRepository->findAll(), 200, [], ['groups' => 'get:list']);
     }
 
@@ -38,20 +38,15 @@ class CustomerController extends AbstractController
      * @Route("/customer/{id}", name="customer_detail", methods={"GET"})
      */
     public function customer(Customer $customer){
-
         return $this->json($customer, 200, [], ['groups' => 'get:detail']);
-
-        if(!$customer){
-            return $this->respond()
-        }
     }
 
     /**
-     * Ajoute un nouveau client en BDD
+     * Permet d'ajouter un nouveau client
      *
      * @Route("/customer/add", name="customer_post", methods={"POST"})
      */
-    public function create(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
+    public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
     ValidatorInterface $validator){
         try {
             $post = $serializer->deserialize($request->getContent(), Customer::class, 'json');
