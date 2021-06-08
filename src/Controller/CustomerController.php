@@ -6,12 +6,15 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -50,6 +53,7 @@ class CustomerController extends AbstractController
     ValidatorInterface $validator){
         try {
             $post = $serializer->deserialize($request->getContent(), Customer::class, 'json');
+
             $post->setCreatedAt(new \DateTime());
 
             $errors = $validator->validate($post);
@@ -69,6 +73,10 @@ class CustomerController extends AbstractController
                 'message' => $exception->getMessage()
             ], 400);
         }
+    }
+
+    public function userCustomer(){
+
     }
 
 }

@@ -21,7 +21,7 @@ class User
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users")
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"get:infos"})
      * @Assert\NotBlank(message="The customerId can't not be blank")
