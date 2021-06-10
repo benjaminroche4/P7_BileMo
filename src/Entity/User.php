@@ -16,7 +16,7 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "get:userList"})
      */
     private $id;
 
@@ -30,7 +30,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "get:userList"})
      * @Assert\NotBlank(message="The first name can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
@@ -38,7 +38,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "get:userList"})
      * @Assert\NotBlank(message="The last name can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
@@ -46,7 +46,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "get:userList"})
      * @Assert\NotBlank(message="The email can't not be blank")
      * @Assert\Length(min=3, max=100)
      */

@@ -10,12 +10,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 class UserController extends AbstractController
 {
@@ -25,9 +30,15 @@ class UserController extends AbstractController
      *
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route("/user/{id}", name="user_detail", methods={"GET"})
+     * @Route("/user/{id}", name="user_detail", methods={"GET"}, options={"default" : null})
      */
-    public function user(User $user){
+    public function user(?User $user){
+        if($user === null){
+            return $this->json([
+                'status' => 404,
+                'message' => 'User not found'
+            ], 404);
+        }
         return $this->json($user, 200, [], ['groups' => 'get:infos']);
     }
 
@@ -39,11 +50,11 @@ class UserController extends AbstractController
      * @return JsonResponse
      * @Route("/user/delete/{id}", name="user_delete", methods={"delete"})
      */
-    public function delete(User $user, EntityManagerInterface $entityManager, UserRepository $repository){
+    public function delete(?User $user, EntityManagerInterface $entityManager, UserRepository $repository){
         $user = $repository->find($user->getId());
         $entityManager->remove($user);
         $entityManager->flush();
-        return $this->json('The user has been delete.', 204, []);
+        return $this->json('The user has been delete', 204, []);
     }
 
     /**
@@ -52,14 +63,12 @@ class UserController extends AbstractController
      * @Route("/user/add", name="user_add", methods={"post"})
      */
     public function add(Request $request, EntityManagerInterface $entityManager,
-    SerializerInterface $serializer, ValidatorInterface $validator){
+    SerializerInterface $serializer, ValidatorInterface $validator, CustomerRepository $customerRepository){
         try{
-            $customer = new Customer();
-            $customer->getId();
 
             $post = $serializer->deserialize($request->getContent(), User::class, 'json');
             $post->setCreatedAt(new \DateTime());
-            $post->setCustomerId($customer);
+            $post->setCustomerId($request->request->get('customerId'));
 
             $errors = $validator->validate($post);
 
@@ -72,7 +81,7 @@ class UserController extends AbstractController
 
             return $this->json($post, 201, []);
         }
-        catch (NotEncodableValueException $exception){
+        catch(NotEncodableValueException $exception){
             return $this->json([
                 'status' => 400,
                 'message' => $exception->getMessage()

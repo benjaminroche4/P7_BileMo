@@ -100,6 +100,9 @@
     "egulias/email-validator": {
         "version": "3.1.1"
     },
+    "exsyst/swagger": {
+        "version": "v0.4.2"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
@@ -114,6 +117,15 @@
     },
     "monolog/monolog": {
         "version": "2.2.0"
+    },
+    "nelmio/api-doc-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
+        }
     },
     "nikic/php-parser": {
         "version": "v4.10.5"
@@ -532,5 +544,8 @@
     },
     "webmozart/assert": {
         "version": "1.10.0"
+    },
+    "zircote/swagger-php": {
+        "version": "2.1.0"
     }
 }

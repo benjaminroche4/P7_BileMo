@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -40,7 +41,13 @@ class CustomerController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/customer/{id}", name="customer_detail", methods={"GET"})
      */
-    public function customer(Customer $customer){
+    public function customer(?Customer $customer){
+        if($customer === null){
+            return $this->json([
+                'status' => 404,
+                'message' => 'Customer not found'
+            ], 404);
+        }
         return $this->json($customer, 200, [], ['groups' => 'get:detail']);
     }
 
@@ -75,8 +82,15 @@ class CustomerController extends AbstractController
         }
     }
 
-    public function userCustomer(){
-
+    /**
+     * Permet de savoir la liste des utilisateurs lié à un client
+     *
+     * @param Customer $customer
+     * @param UserRepository $userRepository
+     * @Route("/customer/{id}/list", name="customer_user", methods={"GET"})
+     */
+    public function userList(Customer $customer, UserRepository $userRepository){
+        $users = $userRepository->findBy(['customerId'=>$customer->getId()]);
+        return $this->json($users, 200, [], ['groups'=>'get:userList']);
     }
-
 }

@@ -31,8 +31,14 @@ class ProductController extends AbstractController
      * @param Product $product
      * @Route("/product/{id}", name="product_detail", methods={"GET"})
      */
-    public function detail(Product $product)
+    public function detail(?Product $product)
     {
+        if($product === null){
+            return $this->json([
+                'status' => 404,
+                'message' => 'Product not found'
+            ], 404);
+        }
         return $this->json($product, 200, []);
     }
 }
