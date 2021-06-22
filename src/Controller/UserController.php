@@ -66,6 +66,7 @@ class UserController extends AbstractController
     SerializerInterface $serializer, ValidatorInterface $validator, CustomerRepository $customerRepository){
         try{
             $post = $serializer->deserialize($request->getContent(), User::class, 'json');
+
             $post->setCreatedAt(new \DateTime());
             $post->setCustomerId($customerRepository->find('3809'));
 
@@ -100,12 +101,15 @@ class UserController extends AbstractController
      * @Route("/user/update/{id}", name="user_update", methods={"put"})
      */
     public function update(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
-    ValidatorInterface $validator, User $user, UserRepository $repository){
+    ValidatorInterface $validator, User $user, UserRepository $repository, CustomerRepository $customerRepository){
         try{
             $user = $repository->find($user->getId());
 
             $post = $serializer->deserialize($request->getContent(), User::class, 'json');
+
+            $post->setCreatedAt($customerRepository->findBy('createdAt'));
             $post->setUpdatedAt(new \DateTime());
+            $post->setCustomerId($customerRepository->find('3809'));
 
             $errors = $validator->validate($post);
 
@@ -116,7 +120,7 @@ class UserController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->json($post, 201, []);
+            return $this->json($post, 201, [], ['groups' => 'update:user']);
         }
         catch (NotEncodableValueException $exception){
             return $this->json([
