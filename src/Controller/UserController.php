@@ -65,10 +65,9 @@ class UserController extends AbstractController
     public function add(Request $request, EntityManagerInterface $entityManager,
     SerializerInterface $serializer, ValidatorInterface $validator, CustomerRepository $customerRepository){
         try{
-
             $post = $serializer->deserialize($request->getContent(), User::class, 'json');
             $post->setCreatedAt(new \DateTime());
-            $post->setCustomerId($request->request->get('customerId'));
+            $post->setCustomerId($customerRepository->find('3809'));
 
             $errors = $validator->validate($post);
 
@@ -79,7 +78,7 @@ class UserController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->json($post, 201, []);
+            return $this->json($post, 201, [], ['groups' => 'post:user']);
         }
         catch(NotEncodableValueException $exception){
             return $this->json([

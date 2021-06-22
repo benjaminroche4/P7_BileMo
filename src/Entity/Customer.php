@@ -24,7 +24,7 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:list", "get:detail"})
+     * @Groups({"get:list", "get:detail", "post:user"})
      * @Assert\NotBlank(message="The compagny can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
