@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,10 +58,11 @@ class CustomerController extends AbstractController
      * @Route("/customer/add", name="customer_post", methods={"POST"})
      */
     public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
-    ValidatorInterface $validator){
+    ValidatorInterface $validator, UserPasswordEncoderInterface $encoder){
         try {
             $post = $serializer->deserialize($request->getContent(), Customer::class, 'json');
 
+            $post->setPassword($encoder);
             $post->setCreatedAt(new \DateTime());
 
             $errors = $validator->validate($post);
@@ -89,8 +91,15 @@ class CustomerController extends AbstractController
      * @param UserRepository $userRepository
      * @Route("/customer/{id}/list", name="customer_user", methods={"GET"})
      */
-    public function userList(Customer $customer, UserRepository $userRepository){
+    public function userList(Customer $customer, UserRepository $userRepository, PaginatorInterface $paginator, Request $request){
         $users = $userRepository->findBy(['customerId'=>$customer->getId()]);
+
+        $users = $paginator->paginate(
+            $users,
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+
         return $this->json($users, 200, [], ['groups'=>'get:userList']);
     }
 }

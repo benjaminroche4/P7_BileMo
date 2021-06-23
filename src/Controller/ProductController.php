@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,9 +22,17 @@ class ProductController extends AbstractController
      *
      * @Route("/product", name="product_list", methods={"GET"})
      */
-    public function list(ProductRepository $productRepository): Response
+    public function list(ProductRepository $productRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        return $this->json($productRepository->findAll(), 200, [], ['groups' => 'get:list']);
+        $product = $productRepository->findAll();
+
+        $product = $paginator->paginate(
+            $product,
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+
+        return $this->json($product, 200, [], ['groups' => 'get:list']);
     }
 
     /**
