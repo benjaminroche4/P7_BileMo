@@ -22,6 +22,8 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 
 class CustomerController extends AbstractController
@@ -31,7 +33,12 @@ class CustomerController extends AbstractController
      *
      * @Route("/customer", name="customer_list", methods={"GET"})
      */
-    public function list(CustomerRepository $customerRepository){
+    public function list(CustomerRepository $customerRepository, CacheInterface $cache){
+
+        $cache->get('list', function(ItemInterface $item){
+            $item->expiresAfter(10);
+        });
+
         return $this->json($customerRepository->findAll(), 200, [], ['groups' => 'get:list']);
     }
 
