@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class ProductController extends AbstractController
 {
@@ -22,9 +24,12 @@ class ProductController extends AbstractController
      *
      * @Route("/product", name="product_list", methods={"GET"})
      */
-    public function list(ProductRepository $productRepository, PaginatorInterface $paginator, Request $request): Response
+    public function list(ProductRepository $productRepository, PaginatorInterface $paginator, Request $request, CacheInterface $cache): Response
     {
-        $product = $productRepository->findAll();
+        $product = $cache->get('list', function(ItemInterface $item) use ($productRepository):array{
+            $item->expiresAfter(3600);
+            return $productRepository->findAll();
+        });
 
         $product = $paginator->paginate(
             $product,

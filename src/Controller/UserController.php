@@ -88,47 +88,4 @@ class UserController extends AbstractController
             ], 400);
         }
     }
-
-    /**
-     * Permet de modifier les infos d'un client
-     *
-     * @param Request $request
-     * @param SerializerInterface $serializer
-     * @param EntityManagerInterface $entityManager
-     * @param ValidatorInterface $validator
-     * @param User $user
-     * @return JsonResponse
-     * @Route("/user/update/{id}", name="user_update", methods={"put"})
-     */
-    public function update(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
-    ValidatorInterface $validator, User $user, UserRepository $repository, CustomerRepository $customerRepository){
-        try{
-            $user = $repository->find($user->getId());
-
-            $post = $serializer->deserialize($request->getContent(), User::class, 'json');
-
-            $post->setCreatedAt($customerRepository->findBy('createdAt'));
-            $post->setUpdatedAt(new \DateTime());
-            $post->setCustomerId($customerRepository->find('3809'));
-
-            $errors = $validator->validate($post);
-
-            if(count($errors) > 0){
-                return $this->json($errors, 400);
-            }
-
-            $entityManager->persist($post);
-            $entityManager->flush();
-
-            return $this->json($post, 201, [], ['groups' => 'update:user']);
-        }
-        catch (NotEncodableValueException $exception){
-            return $this->json([
-                'status' => 400,
-                'message' => $exception->getMessage()
-            ], 400);
-        }
-
-    }
-
 }

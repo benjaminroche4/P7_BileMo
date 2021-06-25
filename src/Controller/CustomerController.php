@@ -35,12 +35,14 @@ class CustomerController extends AbstractController
      */
     public function list(CustomerRepository $customerRepository, CacheInterface $cache){
 
-        $cache->get('list', function(ItemInterface $item){
-            $item->expiresAfter(10);
+        $list = $cache->get('list', function(ItemInterface $item) use ($customerRepository):array{
+            $item->expiresAfter(3600);
+            return $customerRepository->findAll();
         });
 
-        return $this->json($customerRepository->findAll(), 200, [], ['groups' => 'get:list']);
+        return $this->json($list, 200, [], ['groups' => 'get:list']);
     }
+
 
     /**
      * Recupère les détails d'un client
