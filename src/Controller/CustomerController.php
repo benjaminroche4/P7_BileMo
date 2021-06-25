@@ -34,7 +34,6 @@ class CustomerController extends AbstractController
      * @Route("/customer", name="customer_list", methods={"GET"})
      */
     public function list(CustomerRepository $customerRepository, CacheInterface $cache){
-
         $list = $cache->get('list', function(ItemInterface $item) use ($customerRepository):array{
             $item->expiresAfter(3600);
             return $customerRepository->findAll();
@@ -100,8 +99,11 @@ class CustomerController extends AbstractController
      * @param UserRepository $userRepository
      * @Route("/customer/{id}/list", name="customer_user", methods={"GET"})
      */
-    public function userList(Customer $customer, UserRepository $userRepository, PaginatorInterface $paginator, Request $request){
-        $users = $userRepository->findBy(['customerId'=>$customer->getId()]);
+    public function userList(Customer $customer, UserRepository $userRepository, PaginatorInterface $paginator, Request $request, CacheInterface $cache){
+        $users = $cache->get('userList', function(ItemInterface $item) use ($userRepository,$customer):array{
+            $item->expiresAfter(3600);
+            return $userRepository->findBy(['customerId'=>$customer->getId()]);
+        });
 
         $users = $paginator->paginate(
             $users,
