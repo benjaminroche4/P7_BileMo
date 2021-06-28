@@ -23,14 +23,14 @@ class User
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="users", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "post:user"})
      * @Assert\NotBlank(message="The customerId can't not be blank")
      */
     private $customerId;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos", "get:userList"})
+     * @Groups({"get:infos", "get:userList", "post:user"})
      * @Assert\NotBlank(message="The first name can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
@@ -38,7 +38,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos", "get:userList"})
+     * @Groups({"get:infos", "get:userList", "post:user"})
      * @Assert\NotBlank(message="The last name can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
@@ -46,7 +46,7 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:infos", "get:userList"})
+     * @Groups({"get:infos", "get:userList", "post:user"})
      * @Assert\NotBlank(message="The email can't not be blank")
      * @Assert\Length(min=3, max=100)
      */
@@ -54,13 +54,12 @@ class User
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"get:infos"})
+     * @Groups({"get:infos", "post:user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"get:infos"})
      */
     private $updatedAt;
 

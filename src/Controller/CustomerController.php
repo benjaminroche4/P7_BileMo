@@ -66,11 +66,10 @@ class CustomerController extends AbstractController
      * @Route("/customer/add", name="customer_post", methods={"POST"})
      */
     public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager,
-    ValidatorInterface $validator, UserPasswordEncoderInterface $encoder){
+    ValidatorInterface $validator){
         try {
             $post = $serializer->deserialize($request->getContent(), Customer::class, 'json');
 
-            $post->setPassword($encoder);
             $post->setCreatedAt(new \DateTime());
 
             $errors = $validator->validate($post);

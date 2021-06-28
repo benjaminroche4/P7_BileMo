@@ -18,13 +18,13 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get:list", "get:detail", "get:infos"})
+     * @Groups({"get:list", "get:detail", "get:infos", "post:user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get:list", "get:detail", "post:user"})
+     * @Groups({"get:list", "get:detail"})
      * @Assert\NotBlank(message="The compagny can't not be blank")
      * @Assert\Length(min=3, max=50)
      */
